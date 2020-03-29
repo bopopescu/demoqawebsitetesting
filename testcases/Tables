@@ -1,0 +1,30 @@
+from selenium import webdriver
+import time
+from Utilities import xlutils
+
+Openchrome = webdriver.Chrome()
+Openchrome.get("https://demoqa.com/")
+Openchrome.maximize_window()
+Openchrome.find_element_by_xpath("//a[contains(text(),'Automation practice table')]").click()
+Row = len(Openchrome.find_elements_by_xpath("//table[@class='tsc_table_s13']//tbody//tr"))
+column = len(Openchrome.find_elements_by_xpath("//table[@class='tsc_table_s13']//thead/tr/th"))
+print(Row, column)
+
+for col1 in range(1,column+1):
+    header = Openchrome.find_element_by_xpath(("//table[@class='tsc_table_s13']//thead/tr/th["+str(col1)+"]")).text
+    xlutils.writetoxl("C:\\Users\\Ramya\\PycharmProjects\\demoqa practice\\data\\tables.xlsx","Sheet1",1,col1,header)
+
+for rw in range(1,Row+1):
+    structure = Openchrome.find_element_by_xpath("//table[@class='tsc_table_s13']//tbody/tr["+str(rw)+"]/th").text
+    # print("structure is - ",structure)
+    for col in range(1,column):
+        sideheader = Openchrome.find_element_by_xpath(
+            ("//table[@class='tsc_table_s13']//tbody/tr["+str(rw)+"]/th")).text
+        xlutils.writetoxl("C:\\Users\\Ramya\\PycharmProjects\\demoqa practice\\data\\tables.xlsx", "Sheet1", rw+1,1,
+                          sideheader)
+        data =Openchrome.find_element_by_xpath("//table[@class='tsc_table_s13']/tbody/tr["+str(rw)+"]/td["+str(col)+"]").text
+        xlutils.writetoxl("C:\\Users\\Ramya\\PycharmProjects\\demoqa practice\\data\\tables.xlsx", "Sheet1", rw+1, col+1,
+                          data)
+
+
+
